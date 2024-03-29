@@ -1,17 +1,23 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 public class Song {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
+    private UUID id;
 
     private String title;
 
     @ManyToOne
     private Album album;
+
+    public Song() {}
 
     public Song(String title, Album album) {
         this.title = title;
@@ -26,7 +32,7 @@ public class Song {
         this.album = album;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

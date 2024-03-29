@@ -1,14 +1,17 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Album {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
+    private UUID id;
 
     private String title;
 
@@ -17,6 +20,8 @@ public class Album {
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Song> songs;
+
+    public Album() {}
 
     public Album(String title, Artist artist, List<Song> songs) {
         this.title = title;
@@ -36,7 +41,7 @@ public class Album {
         this.songs = songs;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
     public String getTitle() {
