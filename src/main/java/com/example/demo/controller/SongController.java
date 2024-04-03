@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Song;
+import com.example.demo.model.SongDTO;
 import com.example.demo.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -15,12 +17,12 @@ public class SongController {
     private SongService songService;
 
     @PostMapping
-    public Song createSong(@RequestBody Song song) {
+    public Song createSong(@RequestBody SongDTO song) {
         return songService.saveSong(song);
     }
 
     @PutMapping("/{id}")
-    public Song updateSong(@PathVariable UUID id, @RequestBody Song newSong) {
+    public Optional<Song> updateSong(@PathVariable UUID id, @RequestBody SongDTO newSong) {
         return songService.updateSong(id, newSong);
     }
 

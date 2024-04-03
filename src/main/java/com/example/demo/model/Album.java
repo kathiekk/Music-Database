@@ -1,9 +1,12 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -11,23 +14,18 @@ public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @UuidGenerator
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     private String title;
 
     @ManyToOne
-    private Artist artist;
+    private Optional<Artist> artist;
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album")
     private List<Song> songs;
 
     public Album() {}
-
-    public Album(String title, Artist artist, List<Song> songs) {
-        this.title = title;
-        this.artist = artist;
-        this.songs = songs;
-    }
 
     public void setId(UUID id) {
         this.id = id;
@@ -37,7 +35,7 @@ public class Album {
         this.title = title;
     }
 
-    public void setArtist(Artist artist) {
+    public void setArtist(Optional<Artist> artist) {
         this.artist = artist;
     }
 
@@ -52,9 +50,11 @@ public class Album {
         return title;
     }
 
-    public Artist getArtist() {
+    public Optional<Artist> getArtist() {
         return artist;
     }
+
+    public UUID getArtistID() { return artist.get().getId();}
 
     public List<Song> getSongs() {
         return songs;

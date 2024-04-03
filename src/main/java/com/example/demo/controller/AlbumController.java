@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Album;
+import com.example.demo.model.AlbumDTO;
 import com.example.demo.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -15,12 +17,12 @@ public class AlbumController {
     private AlbumService albumService;
 
     @PostMapping
-    public Album createAlbum(@RequestBody Album album) {
+    public Album createAlbum(@RequestBody AlbumDTO album) {
         return albumService.saveAlbum(album);
     }
 
     @PutMapping("/{id}")
-    public Album updateAlbum(@PathVariable UUID id, @RequestBody Album newAlbum) {
+    public Optional<Album> updateAlbum(@PathVariable UUID id, @RequestBody AlbumDTO newAlbum) {
         return albumService.updateAlbum(id, newAlbum);
     }
 

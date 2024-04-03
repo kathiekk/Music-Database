@@ -1,8 +1,11 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -10,6 +13,7 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @UuidGenerator
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     private String title;
@@ -19,11 +23,6 @@ public class Song {
 
     public Song() {}
 
-    public Song(String title, Album album) {
-        this.title = title;
-        this.album = album;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -32,13 +31,15 @@ public class Song {
         this.title = title;
     }
 
-    public void setAlbum(Album album) {
+    public void setAlbum(Optional<Album> album) {
         this.album = album;
     }
 
     public UUID getId() {
         return id;
     }
+
+    public UUID getAlbumID() { return album.getId(); }
 
     public String getTitle() {
         return title;

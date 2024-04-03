@@ -1,36 +1,51 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Album;
 import com.example.demo.model.Song;
+import com.example.demo.model.SongDTO;
+import com.example.demo.repository.AlbumRepository;
 import com.example.demo.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class SongService {
 
-    @Autowired
-    private SongRepository songRepository;
+    private final SongRepository songRepository;
+    private final AlbumRepository albumRepository;
 
-    public Song saveSong(Song song) {
+    @Autowired
+    SongService(SongRepository songRepository, AlbumRepository albumRepository) {
+        this.songRepository = songRepository;
+        this.albumRepository = albumRepository;
+    }
+
+    public Song saveSong(SongDTO songDTO) {
+        Song song = new Song();
+        song.setTitle(songDTO.getTitle());
+        Optional<Album> album = albumRepository.findById(songDTO.getAlbumID());
+        if (album.isPresent()) {
+            song.setAlbum(album);
+        }
         return songRepository.save(song);
     }
 
-    public Song updateSong(UUID id, Song newSong) {
+    public Optional<Song> updateSong(UUID id, SongDTO songDTO) {
         return songRepository.findById(id)
                 .map(song -> {
-                    if (newSong.getTitle() != null) {
-                        song.setTitle(newSong.getTitle());
+                    if (songDTO.getTitle() != null) {
+                        song.setTitle(songDTO.getTitle());
                     }
-                    if (newSong.getAlbum() != null) {
-                        song.setAlbum(newSong.getAlbum());
+                    UUID albumID = songDTO.getAlbumID();
+                    if (albumID != null && albumID != song.getAlbumID()) {
+                        Optional<Album> album = albumRepository.findById(albumID);
+                        if (album.isPresent() )
+                            song.setAlbum(album);
                     }
                     return songRepository.save(song);
-                })
-                .orElseGet(() -> {
-                    newSong.setId(id);
-                    return songRepository.save(newSong);
                 });
     }
 

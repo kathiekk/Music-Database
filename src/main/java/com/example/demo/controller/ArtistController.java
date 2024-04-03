@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Artist;
+import com.example.demo.model.ArtistDTO;
 import com.example.demo.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist createArtist(@RequestBody Artist artist) {
+    public Artist createArtist(@RequestBody ArtistDTO artist) {
         return artistService.saveArtist(artist);
     }
 
@@ -40,7 +41,7 @@ public class ArtistController {
     }
 
     @PutMapping("/{id}")
-    public Artist updateArtist(@PathVariable UUID id, @RequestBody Artist newArtist) {
+    public Optional<Artist> updateArtist(@PathVariable UUID id, @RequestBody ArtistDTO newArtist) {
         return artistService.updateArtist(id, newArtist);
     }
 }

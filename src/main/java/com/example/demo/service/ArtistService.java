@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Artist;
+import com.example.demo.model.ArtistDTO;
 import com.example.demo.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,14 +12,16 @@ import java.util.UUID;
 
 @Service
 public class ArtistService {
-    private ArtistRepository artistRepository;
+    private final ArtistRepository artistRepository;
 
     @Autowired
     public ArtistService(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
     }
 
-    public Artist saveArtist(Artist artist) {
+    public Artist saveArtist(ArtistDTO artistDTO) {
+        Artist artist = new Artist();
+        artist.setName(artistDTO.getName());
         return artistRepository.save(artist);
     }
 
@@ -34,14 +37,10 @@ public class ArtistService {
         artistRepository.deleteById(id);
     }
 
-    public Artist updateArtist(UUID id, Artist newArtist) {
+    public Optional<Artist> updateArtist(UUID id, ArtistDTO artistDTO) {
         return artistRepository.findById(id).map(artist -> {
-            artist.setName(newArtist.getName());
-            artist.setAlbums(newArtist.getAlbums());
+            artist.setName(artistDTO.getName());
             return artistRepository.save(artist);
-        }).orElseGet(() -> {
-            newArtist.setId(id);
-            return artistRepository.save(newArtist);
         });
     }
 }

@@ -1,40 +1,53 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Album;
+import com.example.demo.model.AlbumDTO;
+import com.example.demo.model.Artist;
 import com.example.demo.repository.AlbumRepository;
+import com.example.demo.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class AlbumService {
+    private final AlbumRepository albumRepository;
+    private final ArtistRepository artistRepository;
 
     @Autowired
-    private AlbumRepository albumRepository;
+    AlbumService(AlbumRepository albumRepository, ArtistRepository artistRepository) {
+        this.albumRepository = albumRepository;
+        this.artistRepository = artistRepository;
+    }
 
-    public Album saveAlbum(Album album) {
+    public Album saveAlbum(AlbumDTO albumDTO) {
+        Album album = new Album();
+        album.setTitle(albumDTO.getTitle());
+        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
+        if(artist.isPresent()) {
+            album.setArtist(artist);
+            artist.get().addAlbum(album);
+        }
         return albumRepository.save(album);
     }
 
-    public Album updateAlbum(UUID id, Album newAlbum) {
+    public Optional<Album> updateAlbum(UUID id, AlbumDTO albumDTO) {
         return albumRepository.findById(id)
                 .map(album -> {
-                    if (newAlbum.getTitle() != null) {
-                        album.setTitle(newAlbum.getTitle());
+                    if (albumDTO.getTitle() != null) {
+                        album.setTitle(albumDTO.getTitle());
                     }
-                    if (newAlbum.getArtist() != null) {
-                        album.setArtist(newAlbum.getArtist());
-                    }
-                    if (newAlbum.getSongs() != null) {
-                        album.setSongs(newAlbum.getSongs());
+                    if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != album.getArtistID()) {
+                        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
+                        if (artist.isPresent()) {
+                            album.setArtist(artist);
+                            artist.get().addAlbum(album);
+                        }
                     }
                     return albumRepository.save(album);
-                })
-                .orElseGet(() -> {
-                    newAlbum.setId(id);
-                    return albumRepository.save(newAlbum);
-                });
+                    });
     }
 
     public List<Album> getAllAlbums() {
