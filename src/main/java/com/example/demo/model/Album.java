@@ -20,7 +20,7 @@ public class Album {
     private String title;
 
     @ManyToOne
-    private Optional<Artist> artist;
+    private Artist artist;
 
     @OneToMany(mappedBy = "album")
     private List<Song> songs;
@@ -35,7 +35,7 @@ public class Album {
         this.title = title;
     }
 
-    public void setArtist(Optional<Artist> artist) {
+    public void setArtist(Artist artist) {
         this.artist = artist;
     }
 
@@ -50,11 +50,11 @@ public class Album {
         return title;
     }
 
-    public Optional<Artist> getArtist() {
+    public Artist getArtist() {
         return artist;
     }
 
-    public UUID getArtistID() { return artist.get().getId();}
+    public UUID getArtistID() { return artist.getId();}
 
     public List<Song> getSongs() {
         return songs;

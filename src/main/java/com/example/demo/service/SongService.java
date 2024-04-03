@@ -27,9 +27,7 @@ public class SongService {
         Song song = new Song();
         song.setTitle(songDTO.getTitle());
         Optional<Album> album = albumRepository.findById(songDTO.getAlbumID());
-        if (album.isPresent()) {
-            song.setAlbum(album);
-        }
+        album.ifPresent(song::setAlbum);
         return songRepository.save(song);
     }
 
@@ -42,8 +40,7 @@ public class SongService {
                     UUID albumID = songDTO.getAlbumID();
                     if (albumID != null && albumID != song.getAlbumID()) {
                         Optional<Album> album = albumRepository.findById(albumID);
-                        if (album.isPresent() )
-                            song.setAlbum(album);
+                        album.ifPresent(song::setAlbum);
                     }
                     return songRepository.save(song);
                 });

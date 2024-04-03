@@ -17,9 +17,7 @@ public class AlbumController {
     private AlbumService albumService;
 
     @PostMapping
-    public Album createAlbum(@RequestBody AlbumDTO album) {
-        return albumService.saveAlbum(album);
-    }
+    public Album createAlbum(@RequestBody AlbumDTO album) { return albumService.saveAlbum(album); }
 
     @PutMapping("/{id}")
     public Optional<Album> updateAlbum(@PathVariable UUID id, @RequestBody AlbumDTO newAlbum) {
@@ -27,9 +25,7 @@ public class AlbumController {
     }
 
     @GetMapping("/all")
-    public List<Album> getAllAlbums() {
-        return albumService.getAllAlbums();
-    }
+    public List<Album> getAllAlbums() { return albumService.getAllAlbums(); }
 
     @GetMapping("/{id}")
     public Album getAlbumById(@PathVariable UUID id) {

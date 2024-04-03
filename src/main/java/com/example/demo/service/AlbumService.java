@@ -27,7 +27,7 @@ public class AlbumService {
         album.setTitle(albumDTO.getTitle());
         Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
         if(artist.isPresent()) {
-            album.setArtist(artist);
+            album.setArtist(artist.get());
             artist.get().addAlbum(album);
         }
         return albumRepository.save(album);
@@ -42,7 +42,7 @@ public class AlbumService {
                     if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != album.getArtistID()) {
                         Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
                         if (artist.isPresent()) {
-                            album.setArtist(artist);
+                            album.setArtist(artist.get());
                             artist.get().addAlbum(album);
                         }
                     }

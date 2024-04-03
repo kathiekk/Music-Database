@@ -31,7 +31,7 @@ public class Song {
         this.title = title;
     }
 
-    public void setAlbum(Optional<Album> album) {
+    public void setAlbum(Album album) {
         this.album = album;
     }
 
