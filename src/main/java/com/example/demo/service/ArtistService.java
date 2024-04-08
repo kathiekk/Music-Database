@@ -4,7 +4,9 @@ import com.example.demo.model.Artist;
 import com.example.demo.model.ArtistDTO;
 import com.example.demo.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,18 +31,22 @@ public class ArtistService {
         return artistRepository.findAll();
     }
 
-    public Optional<Artist> getArtistById(UUID id) {
-        return artistRepository.findById(id);
+    public Artist getArtistById(UUID id) {
+            Optional<Artist> artist = artistRepository.findById(id);
+            if(artist.isPresent())
+                return artist.get();
+            else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found");
     }
 
     public void deleteArtist(UUID id) {
-        artistRepository.deleteById(id);
+         artistRepository.deleteById(id);
     }
 
-    public Optional<Artist> updateArtist(UUID id, ArtistDTO artistDTO) {
+    public Artist updateArtist(UUID id, ArtistDTO artistDTO) {
         return artistRepository.findById(id).map(artist -> {
             artist.setName(artistDTO.getName());
             return artistRepository.save(artist);
-        });
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
     }
 }

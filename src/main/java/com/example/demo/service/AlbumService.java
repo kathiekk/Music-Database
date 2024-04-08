@@ -6,7 +6,10 @@ import com.example.demo.model.Artist;
 import com.example.demo.repository.AlbumRepository;
 import com.example.demo.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,24 +33,29 @@ public class AlbumService {
             album.setArtist(artist.get());
             artist.get().addAlbum(album);
         }
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artist with such ID found");
+
         return albumRepository.save(album);
     }
 
-    public Optional<Album> updateAlbum(UUID id, AlbumDTO albumDTO) {
+    public Album updateAlbum(UUID id, AlbumDTO albumDTO) {
         return albumRepository.findById(id)
                 .map(album -> {
-                    if (albumDTO.getTitle() != null) {
-                        album.setTitle(albumDTO.getTitle());
-                    }
-                    if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != album.getArtistID()) {
+                    album.setTitle(albumDTO.getTitle());
+
+                    if (albumDTO.getArtistId() != album.getArtistID()) {
                         Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
                         if (artist.isPresent()) {
                             album.setArtist(artist.get());
                             artist.get().addAlbum(album);
                         }
+                        else
+                            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artist with such ID found");
+
                     }
                     return albumRepository.save(album);
-                    });
+                    }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
     }
 
     public List<Album> getAllAlbums() {
@@ -55,10 +63,14 @@ public class AlbumService {
     }
 
     public Album getAlbumById(UUID id) {
-        return albumRepository.findById(id).orElse(null);
+        Optional<Album> album = albumRepository.findById(id);
+        if (album.isPresent())
+            return album.get();
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found");
     }
 
     public void deleteAlbum(UUID id) {
-        albumRepository.deleteById(id);
+            albumRepository.deleteById(id);
     }
 }

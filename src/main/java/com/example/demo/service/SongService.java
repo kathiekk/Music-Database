@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Album;
+import com.example.demo.model.Artist;
 import com.example.demo.model.Song;
 import com.example.demo.model.SongDTO;
 import com.example.demo.repository.AlbumRepository;
 import com.example.demo.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,19 +35,19 @@ public class SongService {
         return songRepository.save(song);
     }
 
-    public Optional<Song> updateSong(UUID id, SongDTO songDTO) {
-        return songRepository.findById(id)
-                .map(song -> {
-                    if (songDTO.getTitle() != null) {
-                        song.setTitle(songDTO.getTitle());
-                    }
+    public Song updateSong(UUID id, SongDTO songDTO) {
+        return songRepository.findById(id).map(song -> {
+                    song.setTitle(songDTO.getTitle());
                     UUID albumID = songDTO.getAlbumID();
-                    if (albumID != null && albumID != song.getAlbumID()) {
+                    if (albumID != song.getAlbumID()) {
                         Optional<Album> album = albumRepository.findById(albumID);
-                        album.ifPresent(song::setAlbum);
+                        if (album.isPresent())
+                            song.setAlbum(album.get());
+                        else
+                            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Album with such ID not found");
                     }
                     return songRepository.save(song);
-                });
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
     }
 
     public List<Song> getAllSongs() {
@@ -51,7 +55,11 @@ public class SongService {
     }
 
     public Song getSongById(UUID id) {
-        return songRepository.findById(id).orElse(null);
+        Optional<Song> song = songRepository.findById(id);
+        if(song.isPresent())
+            return song.get();
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found");
     }
 
     public void deleteSong(UUID id) {

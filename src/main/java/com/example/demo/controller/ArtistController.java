@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Artist;
 import com.example.demo.model.ArtistDTO;
 import com.example.demo.service.ArtistService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist createArtist(@RequestBody ArtistDTO artist) {
+    public Artist createArtist(@RequestBody @NotNull ArtistDTO artist) {
         return artistService.saveArtist(artist);
     }
 
@@ -31,17 +32,17 @@ public class ArtistController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Artist> getArtistById(@PathVariable UUID id) {
+    public Artist getArtistById(@PathVariable @NotNull UUID id) {
         return artistService.getArtistById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteArtist(@PathVariable UUID id) {
+    public void deleteArtist(@PathVariable @NotNull UUID id) {
         artistService.deleteArtist(id);
     }
 
     @PutMapping("/{id}")
-    public Optional<Artist> updateArtist(@PathVariable UUID id, @RequestBody ArtistDTO newArtist) {
+    public Artist updateArtist(@PathVariable @NotNull UUID id, @RequestBody @NotNull ArtistDTO newArtist) {
         return artistService.updateArtist(id, newArtist);
     }
 }
