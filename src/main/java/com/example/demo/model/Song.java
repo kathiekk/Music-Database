@@ -48,4 +48,12 @@ public class Song {
     public Album getAlbum() {
         return album;
     }
+
+    public SongDTO toDTO() {
+        SongDTO songDTO = new SongDTO();
+        songDTO.setTitle(title);
+        songDTO.setAlbumID(getAlbumID());
+        songDTO.setSongID(id);
+        return songDTO;
+    }
 }

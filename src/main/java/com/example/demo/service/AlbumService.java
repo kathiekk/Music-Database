@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
@@ -25,7 +26,7 @@ public class AlbumService {
         this.artistRepository = artistRepository;
     }
 
-    public Album saveAlbum(AlbumDTO albumDTO) {
+    public AlbumDTO saveAlbum(AlbumDTO albumDTO) {
         Album album = new Album();
         album.setTitle(albumDTO.getTitle());
         Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
@@ -36,10 +37,12 @@ public class AlbumService {
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artist with such ID found");
 
-        return albumRepository.save(album);
+        albumRepository.save(album);
+        albumDTO.setAlbumID(album.getId());
+        return albumDTO;
     }
 
-    public Album updateAlbum(UUID id, AlbumDTO albumDTO) {
+    public AlbumDTO updateAlbum(UUID id, AlbumDTO albumDTO) {
         return albumRepository.findById(id)
                 .map(album -> {
                     album.setTitle(albumDTO.getTitle());
@@ -54,18 +57,20 @@ public class AlbumService {
                             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artist with such ID found");
 
                     }
-                    return albumRepository.save(album);
+                    albumRepository.save(album);
+                    return albumDTO;
                     }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
     }
 
-    public List<Album> getAllAlbums() {
-        return albumRepository.findAll();
+    public List<AlbumDTO> getAllAlbums() {
+        List<Album> albums = albumRepository.findAll();
+        return albums.stream().map(Album::toDTO).toList();
     }
 
-    public Album getAlbumById(UUID id) {
+    public AlbumDTO getAlbumById(UUID id) {
         Optional<Album> album = albumRepository.findById(id);
         if (album.isPresent())
-            return album.get();
+            return album.get().toDTO();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found");
     }

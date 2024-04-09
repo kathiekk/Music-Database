@@ -18,22 +18,22 @@ public class SongController {
     private SongService songService;
 
     @PostMapping
-    public Song createSong(@RequestBody @NotNull SongDTO song) {
+    public SongDTO createSong(@RequestBody @NotNull SongDTO song) {
         return songService.saveSong(song);
     }
 
     @PutMapping("/{id}")
-    public Song updateSong(@PathVariable @NotNull UUID id, @RequestBody @NotNull SongDTO newSong) {
+    public SongDTO updateSong(@PathVariable @NotNull UUID id, @RequestBody @NotNull SongDTO newSong) {
         return songService.updateSong(id, newSong);
     }
 
     @GetMapping("/all")
-    public List<Song> getAllSongs() {
+    public List<SongDTO> getAllSongs() {
         return songService.getAllSongs();
     }
 
     @GetMapping("/{id}")
-    public Song getSongById(@PathVariable @NotNull UUID id) {
+    public SongDTO getSongById(@PathVariable @NotNull UUID id) {
         return songService.getSongById(id);
     }
 

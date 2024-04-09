@@ -27,15 +27,17 @@ public class SongService {
         this.albumRepository = albumRepository;
     }
 
-    public Song saveSong(SongDTO songDTO) {
+    public SongDTO saveSong(SongDTO songDTO) {
         Song song = new Song();
         song.setTitle(songDTO.getTitle());
         Optional<Album> album = albumRepository.findById(songDTO.getAlbumID());
         album.ifPresent(song::setAlbum);
-        return songRepository.save(song);
+        songRepository.save(song);
+        songDTO.setSongID(song.getId());
+        return songDTO;
     }
 
-    public Song updateSong(UUID id, SongDTO songDTO) {
+    public SongDTO updateSong(UUID id, SongDTO songDTO) {
         return songRepository.findById(id).map(song -> {
                     song.setTitle(songDTO.getTitle());
                     UUID albumID = songDTO.getAlbumID();
@@ -46,18 +48,20 @@ public class SongService {
                         else
                             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Album with such ID not found");
                     }
-                    return songRepository.save(song);
+                    songRepository.save(song);
+                    return songDTO;
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
     }
 
-    public List<Song> getAllSongs() {
-        return songRepository.findAll();
+    public List<SongDTO> getAllSongs() {
+        List<Song> songs = songRepository.findAll();
+        return songs.stream().map(Song::toDTO).toList();
     }
 
-    public Song getSongById(UUID id) {
+    public SongDTO getSongById(UUID id) {
         Optional<Song> song = songRepository.findById(id);
         if(song.isPresent())
-            return song.get();
+            return song.get().toDTO();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found");
     }

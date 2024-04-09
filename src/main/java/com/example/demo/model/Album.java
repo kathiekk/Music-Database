@@ -59,4 +59,12 @@ public class Album {
     public List<Song> getSongs() {
         return songs;
     }
+
+    public AlbumDTO toDTO() {
+        AlbumDTO result = new AlbumDTO();
+        result.setTitle(title);
+        result.setArtistId(getArtistID());
+        result.setAlbumID(id);
+        return result;
+    }
 }

@@ -46,4 +46,11 @@ public class Artist {
     public List<Album> getAlbums() {
         return albums;
     }
+
+    public ArtistDTO toDTO() {
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setName(name);
+        artistDTO.setArtistID(id);
+        return artistDTO;
+    }
 }

@@ -17,18 +17,18 @@ public class AlbumController {
     private AlbumService albumService;
 
     @PostMapping
-    public Album createAlbum(@RequestBody @NotNull AlbumDTO album) { return albumService.saveAlbum(album); }
+    public AlbumDTO createAlbum(@RequestBody @NotNull AlbumDTO album) { return albumService.saveAlbum(album); }
 
     @PutMapping("/{id}")
-    public Album updateAlbum(@PathVariable @NotNull UUID id, @RequestBody @NotNull AlbumDTO newAlbum) {
+    public AlbumDTO updateAlbum(@PathVariable @NotNull UUID id, @RequestBody @NotNull AlbumDTO newAlbum) {
         return albumService.updateAlbum(id, newAlbum);
     }
 
     @GetMapping("/all")
-    public List<Album> getAllAlbums() { return albumService.getAllAlbums(); }
+    public List<AlbumDTO> getAllAlbums() { return albumService.getAllAlbums(); }
 
     @GetMapping("/{id}")
-    public Album getAlbumById(@PathVariable @NotNull UUID id) {
+    public AlbumDTO getAlbumById(@PathVariable @NotNull UUID id) {
         return albumService.getAlbumById(id);
     }
 

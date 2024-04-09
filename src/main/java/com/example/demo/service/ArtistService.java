@@ -21,32 +21,36 @@ public class ArtistService {
         this.artistRepository = artistRepository;
     }
 
-    public Artist saveArtist(ArtistDTO artistDTO) {
+    public ArtistDTO saveArtist(ArtistDTO artistDTO) {
         Artist artist = new Artist();
         artist.setName(artistDTO.getName());
-        return artistRepository.save(artist);
+        artistRepository.save(artist);
+        artistDTO.setArtistID(artist.getId());
+        return artistDTO;
     }
 
-    public List<Artist> getAllArtists() {
-        return artistRepository.findAll();
+    public ArtistDTO updateArtist(UUID id, ArtistDTO artistDTO) {
+        return artistRepository.findById(id).map(artist -> {
+            artist.setName(artistDTO.getName());
+            artistRepository.save(artist);
+            return artistDTO;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
     }
 
-    public Artist getArtistById(UUID id) {
+    public List<ArtistDTO> getAllArtists() {
+        List<Artist> artists = artistRepository.findAll();
+        return artists.stream().map(Artist::toDTO).toList();
+    }
+
+    public ArtistDTO getArtistById(UUID id) {
             Optional<Artist> artist = artistRepository.findById(id);
             if(artist.isPresent())
-                return artist.get();
+                return artist.get().toDTO();
             else
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found");
     }
 
     public void deleteArtist(UUID id) {
          artistRepository.deleteById(id);
-    }
-
-    public Artist updateArtist(UUID id, ArtistDTO artistDTO) {
-        return artistRepository.findById(id).map(artist -> {
-            artist.setName(artistDTO.getName());
-            return artistRepository.save(artist);
-        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
     }
 }

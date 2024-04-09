@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/artists")
 public class ArtistController {
-    private ArtistService artistService;
+    private final ArtistService artistService;
 
     @Autowired
     public ArtistController(ArtistService artistService) {
@@ -22,17 +22,17 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist createArtist(@RequestBody @NotNull ArtistDTO artist) {
+    public ArtistDTO createArtist(@RequestBody @NotNull ArtistDTO artist) {
         return artistService.saveArtist(artist);
     }
 
     @GetMapping("/all")
-    public List<Artist> getAllArtists() {
+    public List<ArtistDTO> getAllArtists() {
         return artistService.getAllArtists();
     }
 
     @GetMapping("/{id}")
-    public Artist getArtistById(@PathVariable @NotNull UUID id) {
+    public ArtistDTO getArtistById(@PathVariable @NotNull UUID id) {
         return artistService.getArtistById(id);
     }
 
@@ -42,7 +42,7 @@ public class ArtistController {
     }
 
     @PutMapping("/{id}")
-    public Artist updateArtist(@PathVariable @NotNull UUID id, @RequestBody @NotNull ArtistDTO newArtist) {
+    public ArtistDTO updateArtist(@PathVariable @NotNull UUID id, @RequestBody @NotNull ArtistDTO newArtist) {
         return artistService.updateArtist(id, newArtist);
     }
 }
