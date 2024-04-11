@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Album;
-import com.example.demo.model.Artist;
 import com.example.demo.model.Song;
 import com.example.demo.model.SongDTO;
 import com.example.demo.repository.AlbumRepository;

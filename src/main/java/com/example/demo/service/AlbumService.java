@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
@@ -29,7 +28,7 @@ public class AlbumService {
     public AlbumDTO saveAlbum(AlbumDTO albumDTO) {
         Album album = new Album();
         album.setTitle(albumDTO.getTitle());
-        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
+        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistID());
         if(artist.isPresent()) {
             album.setArtist(artist.get());
             artist.get().addAlbum(album);
@@ -47,8 +46,8 @@ public class AlbumService {
                 .map(album -> {
                     album.setTitle(albumDTO.getTitle());
 
-                    if (albumDTO.getArtistId() != album.getArtistID()) {
-                        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistId());
+                    if (albumDTO.getArtistID() != album.getArtistID()) {
+                        Optional<Artist> artist = artistRepository.findById(albumDTO.getArtistID());
                         if (artist.isPresent()) {
                             album.setArtist(artist.get());
                             artist.get().addAlbum(album);

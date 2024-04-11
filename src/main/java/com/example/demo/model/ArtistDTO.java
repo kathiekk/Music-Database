@@ -1,19 +1,17 @@
 package com.example.demo.model;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ArtistDTO {
     private UUID artistID;
     @NotNull
     private String name;
-
-
-    public void setName(String name) { this.name = name; }
-    public void setArtistID(UUID artistID) { this.artistID = artistID; }
-    public String getName() {
-            return name;
-    }
-    public UUID getArtistID() { return artistID; }
 }
