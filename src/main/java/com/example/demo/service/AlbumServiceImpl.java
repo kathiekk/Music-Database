@@ -5,6 +5,7 @@ import com.example.demo.model.AlbumDTO;
 import com.example.demo.model.Artist;
 import com.example.demo.repository.AlbumRepository;
 import com.example.demo.repository.ArtistRepository;
+import com.example.demo.service.interfaces.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class AlbumService {
+public class AlbumServiceImpl implements AlbumService {
     private final AlbumRepository albumRepository;
     private final ArtistRepository artistRepository;
 
     @Autowired
-    AlbumService(AlbumRepository albumRepository, ArtistRepository artistRepository) {
+    AlbumServiceImpl(AlbumRepository albumRepository, ArtistRepository artistRepository) {
         this.albumRepository = albumRepository;
         this.artistRepository = artistRepository;
     }

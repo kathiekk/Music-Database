@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.Artist;
 import com.example.demo.model.ArtistDTO;
 import com.example.demo.repository.ArtistRepository;
+import com.example.demo.service.interfaces.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ArtistService {
+public class ArtistServiceImpl implements ArtistService {
     private final ArtistRepository artistRepository;
 
     @Autowired
-    public ArtistService(ArtistRepository artistRepository) {
+    public ArtistServiceImpl(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
     }
 

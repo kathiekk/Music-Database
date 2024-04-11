@@ -1,21 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Song;
 import com.example.demo.model.SongDTO;
-import com.example.demo.service.SongService;
+import com.example.demo.service.interfaces.SongService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/songs")
 public class SongController {
+    private final SongService songService;
 
     @Autowired
-    private SongService songService;
+    public SongController(SongService songService) { this.songService = songService; }
 
     @PostMapping
     public SongDTO createSong(@RequestBody @NotNull SongDTO song) {

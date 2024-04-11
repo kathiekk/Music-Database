@@ -1,14 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Artist;
 import com.example.demo.model.ArtistDTO;
-import com.example.demo.service.ArtistService;
+import com.example.demo.service.interfaces.ArtistService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

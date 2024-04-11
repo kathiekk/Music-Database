@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.AlbumDTO;
-import com.example.demo.service.AlbumService;
+import com.example.demo.service.interfaces.AlbumService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/albums")
 public class AlbumController {
+    private final AlbumService albumService;
 
     @Autowired
-    private AlbumService albumService;
+    public AlbumController(AlbumService albumService) { this.albumService = albumService; }
 
     @PostMapping
     public AlbumDTO createAlbum(@RequestBody @NotNull AlbumDTO album) { return albumService.saveAlbum(album); }
