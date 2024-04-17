@@ -21,11 +21,20 @@ public class SpotifyService {
     @Value("${spotify.clientSecret}")
     private String clientSecret;
 
-    private final WebClient webClient = WebClient.create();
+    @Value("${spotify.token.url}")
+    private String spotifyTokenUrl;
+
+    @Value("${spotify.api.url}")
+    private String spotifyApiUrl;
+
+    @Value("${spotify.featured.playlists.url}")
+    private String featuredPlaylists;
+
+   private  final WebClient webClient = WebClient.create();
 
     public Mono<String> getFeaturedPlaylists() {
         return webClient.post()
-                .uri("https://accounts.spotify.com/api/token")
+                .uri(spotifyTokenUrl)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("grant_type", "client_credentials"))
@@ -43,7 +52,7 @@ public class SpotifyService {
                     }
 
                     return webClient.get()
-                            .uri("https://api.spotify.com/v1/browse/featured-playlists")
+                            .uri(spotifyApiUrl+featuredPlaylists)
                             .header("Authorization", "Bearer " + accessToken)
                             .retrieve()
                             .bodyToMono(String.class);
