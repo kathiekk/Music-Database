@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ public class SpotifyService {
     @Value("${spotify.featured.playlists.url}")
     private String featuredPlaylists;
 
-   private  final WebClient webClient = WebClient.create();
+    @Autowired
+   private WebClient webClient;
 
     public Mono<String> getFeaturedPlaylists() {
         return webClient.post()
