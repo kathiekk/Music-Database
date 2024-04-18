@@ -1,5 +1,6 @@
 package com.example.demo.service.interfaces;
 
+import com.example.demo.DTOs.SpotifyResponseDTO;
 import reactor.core.publisher.Mono;
 
 public interface SpotifyService {
@@ -8,5 +9,5 @@ public interface SpotifyService {
      *
      * @return Mono<String> - a Mono emitting the featured playlists.
      */
-    Mono<String> getFeaturedPlaylists();
+    Mono<SpotifyResponseDTO> getFeaturedPlaylists();
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DTOs.SpotifyResponseDTO;
 import com.example.demo.service.interfaces.SpotifyService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +39,7 @@ public class SpotifyServiceImpl implements SpotifyService {
     @Autowired
    private WebClient webClient;
 
-    public Mono<String> getFeaturedPlaylists() {
+    public Mono<SpotifyResponseDTO> getFeaturedPlaylists() {
         return webClient.post()
                 .uri(spotifyTokenUrl)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()))
@@ -65,7 +66,12 @@ public class SpotifyServiceImpl implements SpotifyService {
                             .uri(spotifyApiUrl+featuredPlaylists)
                             .header("Authorization", "Bearer " + accessToken)
                             .retrieve()
-                            .bodyToMono(String.class);
+                            .bodyToMono(String.class)
+                            .map(responseString -> {
+                                SpotifyResponseDTO DTO = new SpotifyResponseDTO();
+                                DTO.setResponse(responseString);
+                                return DTO;
+                            });
                 });
     }
 }

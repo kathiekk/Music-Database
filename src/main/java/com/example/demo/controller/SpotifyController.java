@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTOs.SpotifyResponseDTO;
 import com.example.demo.service.interfaces.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class SpotifyController {
     private SpotifyService spotifyService;
 
     @GetMapping("/spotify/featured-playlists")
-    public Mono<String> getFeaturedPlaylists() {
+    public Mono<SpotifyResponseDTO> getFeaturedPlaylists() {
         return spotifyService.getFeaturedPlaylists();
     }
 
