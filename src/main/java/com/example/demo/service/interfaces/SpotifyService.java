@@ -7,7 +7,7 @@ public interface SpotifyService {
     /**
      * Retrieves featured playlists from Spotify.
      *
-     * @return Mono<String> - a Mono emitting the featured playlists.
+     * @return A Mono emitting the featured playlists.
      */
     Mono<SpotifyResponseDTO> getFeaturedPlaylists();
 }
