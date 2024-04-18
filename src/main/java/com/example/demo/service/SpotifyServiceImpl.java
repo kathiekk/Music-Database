@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.service.interfaces.SpotifyService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 @Service
-public class SpotifyService {
+public class SpotifyServiceImpl implements SpotifyService {
     @Value("${spotify.clientId}")
     private String clientId;
 
