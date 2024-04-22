@@ -1,10 +1,8 @@
 package com.example.demo.DTOs;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class SpotifyResponseDTO {
     private String response;
 }

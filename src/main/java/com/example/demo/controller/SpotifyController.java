@@ -16,8 +16,8 @@ public class SpotifyController {
     private SpotifyService spotifyService;
 
     @GetMapping("/spotify/featured-playlists")
-    public Mono<SpotifyResponseDTO> getFeaturedPlaylists() {
-        return spotifyService.getFeaturedPlaylists();
+    public Mono<SpotifyResponseDTO> getFeaturedPlaylist() {
+        return spotifyService.fetchFeaturedPlaylistData();
     }
 
 }

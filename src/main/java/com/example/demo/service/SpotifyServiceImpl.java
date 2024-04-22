@@ -39,7 +39,13 @@ public class SpotifyServiceImpl implements SpotifyService {
     @Autowired
    private WebClient webClient;
 
-    public Mono<SpotifyResponseDTO> getFeaturedPlaylists() {
+    @Override
+    public Mono<SpotifyResponseDTO> fetchFeaturedPlaylistData() {
+        return getAccessToken()
+                .flatMap(this::getPlaylist);
+    }
+
+    private Mono<String> getAccessToken() {
         return webClient.post()
                 .uri(spotifyTokenUrl)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()))
@@ -51,27 +57,30 @@ public class SpotifyServiceImpl implements SpotifyService {
                 .onStatus(HttpStatusCode::is5xxServerError, response ->
                         Mono.error(new HttpServerErrorException(response.statusCode())))
                 .bodyToMono(String.class)
-                .flatMap(accessTokenResponse -> {
-                    String accessToken;
+                .flatMap(this::parseAccessToken);
+    }
 
-                    try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode node = objectMapper.readTree(accessTokenResponse);
-                        accessToken = node.get("access_token").asText();
-                    } catch (IOException e) {
-                        return Mono.error(new ServerErrorException("Error parsing access token response", e));
-                    }
+    private Mono<String> parseAccessToken(String accessTokenResponse) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readTree(accessTokenResponse);
+            String accessToken = node.get("access_token").asText();
+            return Mono.just(accessToken);
+        } catch (IOException e) {
+            return Mono.error(new ServerErrorException("Error parsing access token response", e));
+        }
+    }
 
-                    return webClient.get()
-                            .uri(spotifyApiUrl+featuredPlaylists)
-                            .header("Authorization", "Bearer " + accessToken)
-                            .retrieve()
-                            .bodyToMono(String.class)
-                            .map(responseString -> {
-                                SpotifyResponseDTO DTO = new SpotifyResponseDTO();
-                                DTO.setResponse(responseString);
-                                return DTO;
-                            });
+    private Mono<SpotifyResponseDTO> getPlaylist(String accessToken) {
+        return webClient.get()
+                .uri(spotifyApiUrl + featuredPlaylists)
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(responseString -> {
+                    SpotifyResponseDTO dto = new SpotifyResponseDTO();
+                    dto.setResponse(responseString);
+                    return dto;
                 });
     }
 }
